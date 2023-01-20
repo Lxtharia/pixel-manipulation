@@ -2,7 +2,9 @@
 Pixelsorting and glitch effects written in C
 
 
-```pixel-effect.out <input-file> [<output-file>]```
+```
+processImage.out <input-file> [<output-file>]
+```
 
 it uses image magick to convert the images, so better have that installed
 
@@ -12,4 +14,4 @@ yeah
 
 you can use the .so files with [swaylock-effects](https://github.com/mortie/swaylock-effects) (`--effect-custom <path/effect.so>`)
 
-have fun (i sure have!)
+have fun :D (i sure have!)
