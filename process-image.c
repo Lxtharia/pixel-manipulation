@@ -1,4 +1,5 @@
 #include "./effects/v2-pixelsort-effect.c"
+//#include "./effects/glitchy-v1.c"
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -30,7 +31,9 @@ int readHeader(FILE* in, int* w, int*  h, int* max){
 	return 0;
 }
 
-// > in_path.any out_path.jpg
+// Notes so i know what i wanted to do:
+//
+// Usage:> in_path.any out_path.jpg
 //
 // convert in_path.any ./tempin.ppm
 // fopen(./tempin.ppm) && rm tempin
@@ -42,7 +45,7 @@ int readHeader(FILE* in, int* w, int*  h, int* max){
 int main (int argc, char *argv[])
 {
 	if(argc < 2 || argc > 3){
-		printf("Usage: <input_path> [<output_path>]\n");
+		printf("Usage: %s <input_path> [<output_path>]\n", argv[0]);
 		return -1;
 	}
 	char cwd[4096];
@@ -60,8 +63,11 @@ int main (int argc, char *argv[])
 	}
 	// convert from in.png
 	printf("Converting input to .ppm\n");
+	
 	snprintf(cmdbuffer, sizeof(cmdbuffer), "/usr/bin/convert %s %s", in_path, tempin_path);
-	system(cmdbuffer);
+	if (system(cmdbuffer)== -1)
+		return printf("Could not execute convert. Make sure ImageMagick is installed.")-1;
+	
 
 	// Open file, must be ppm
 	FILE* in = fopen(tempin_path, "r");
@@ -86,10 +92,12 @@ int main (int argc, char *argv[])
 	
 	printf("Sorting...\n");
 	// ##### Sorting ######
-	swaylock_effect(data, width,height);
+	swaylock_effect(data, width, height);
+//	swaylock_effect(data, width, height);
 	// ####################
 	
-	// write to file
+	// ###################
+	// writing to file
 		// header
 	fprintf(out, "P6\n");
 	fprintf(out, "%d%1c%d\n", width, 0x20, height);
