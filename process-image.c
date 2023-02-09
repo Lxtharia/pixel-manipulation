@@ -1,5 +1,5 @@
-#include "./effects/v2-pixelsort-effect.c"
-//#include "./effects/glitchy-v1.c"
+#include "./effects/v4-pixelsort-effect.c"
+#include "./effects/v3-pixelsort-effect.c"
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -39,7 +39,7 @@ int readHeader(FILE* in, int* w, int*  h, int* max){
 // fopen(./tempin.ppm) && rm tempin
 // ...
 // fwrite(./tempout.ppm)
-// convert ./tempout.ppm out_path && rm tempout.ppm 
+// convert ./tempout.ppm out_path && rm tempout.ppm
 
 
 int main (int argc, char *argv[])
@@ -56,53 +56,54 @@ int main (int argc, char *argv[])
 	char* out_path;
 
 	getcwd(cwd, 4096);
-	if (argc == 3) 
+	if (argc == 3)
 		out_path = argv[2];
-	else{ 
+	else{
 		out_path = "proc.png";
 	}
 	// convert from in.png
 	printf("Converting input to .ppm\n");
-	
+
 	snprintf(cmdbuffer, sizeof(cmdbuffer), "/usr/bin/convert %s %s", in_path, tempin_path);
 	if (system(cmdbuffer)== -1)
 		return printf("Could not execute convert. Make sure ImageMagick is installed.")-1;
-	
+
 
 	// Open file, must be ppm
 	FILE* in = fopen(tempin_path, "r");
 	FILE* out = fopen(tempout_path, "w");
 
-	// read from file 
+	// read from file
 		// header
 	readHeader(in, &width, &height, &maxColorValue);
 		// Just Debugging, for fun
 		printf("Width: %d\nHeight: %d\n", width, height);
-		printf("Max: %d\n", maxColorValue);	
+		printf("Max: %d\n", maxColorValue);
 		// data
 	data = calloc(width*height, sizeof(uint32_t));
 	for (int i = 0; i < width*height; i++) {
-		uint32_t px = (fgetc(in) << 24) 
+		uint32_t px = (fgetc(in) << 24)
 					+ (fgetc(in) << 16)
 					+ (fgetc(in) << 8)
 					+ 0x000000ff;
 		data[i] = px;
 	}
 	fclose(in);
-	
+
 	printf("Sorting...\n");
 	// ##### Sorting ######
 	swaylock_effect(data, width, height);
-//	swaylock_effect(data, width, height);
+	glitch(data, width, height);
 	// ####################
-	
-	// ###################
+
+
+
 	// writing to file
 		// header
 	fprintf(out, "P6\n");
 	fprintf(out, "%d%1c%d\n", width, 0x20, height);
 	fprintf(out, "%d\n", maxColorValue);
-		// data 
+		// data
 	for (int i = 0; i < width*height; i++) {
 		uint32_t px = data[i];
 		px = px >> 8; // alpha be gone
@@ -120,7 +121,7 @@ int main (int argc, char *argv[])
 	printf("Removing temporary files\n");
 	snprintf(cmdbuffer, sizeof(cmdbuffer), "rm %s %s", tempin_path, tempout_path);
 	system(cmdbuffer);
-	
+
 	free(data);
 	printf("Done.\n");
 	return 0;
