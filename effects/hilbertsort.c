@@ -4,7 +4,7 @@
 #include <stdint.h>
 #include "colorFunctions.c"
 #include "gilbert2d.c"
-
+int counter = 0;
 void swap(col_wrap* x, col_wrap* y){
 	//swapped the wrapper structs
 	col_wrap temp = *x;
@@ -19,6 +19,7 @@ void swap(col_wrap* x, col_wrap* y){
 	color* tempp = x->col;
 	x->col = y->col;
 	y->col = tempp;
+	counter++;
 }
 
 
@@ -53,12 +54,15 @@ void debugIntervals(col_wrap* a, int start, int end){
 	}
 }
 
-#define RMAX 400
+//#define RMAX 400
 #define RMIN 100
 #define THRESH_BRIGHT 128
 #define THRESH_HUE 180
+int RMAX = 1200;
 int ran_section_len = 0;
+
 enum selec_mode {RANDOM, HUE, BRIGHT, FULL_LINE};
+
 char condition (col_wrap c, int section_offset_counter){
     switch(RANDOM){
 	case RANDOM:
@@ -122,5 +126,7 @@ void pixelsort(uint32_t data[], int width, int height) {
 }
 
 void swaylock_effect(uint32_t data[], int width, int height) {
+	RMAX = 200 + rand() % 1200;
+	printf("Sorting with max section length of %d\n", RMAX);
 	pixelsort(data, width, height);
 }

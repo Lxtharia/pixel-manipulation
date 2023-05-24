@@ -1,6 +1,6 @@
-//#include "./effects/v4-pixelsort-effect.c"
-//#include "./effects/v3-pixelsort-effect.c"
-#include "./effects/hilbertsort.c"
+#include "./effects/v4-pixelsort-effect.c"
+//#include "./effects/glitch-v2.c"
+//#include "./effects/hilbertsort.c"
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -94,6 +94,7 @@ int main (int argc, char *argv[])
 	printf("Sorting...\n");
 	// ##### Sorting ######
 	swaylock_effect(data, width, height);
+//	hilbertsort(data, width, height);
 //	glitch(data, width, height);
 	// ####################
 

@@ -64,9 +64,16 @@ void swap(col_wrap* x, col_wrap* y){
 	*x = *y;
 	*y = temp;
 	// also swap the colors in the data array
+	//This copies memory
 	color tempc = *(x->col);
 	*(x->col) = *(y->col);
 	*(y->col) = tempc;
+	// x is pointing to the pixel/color cx, y to cy
+	// we now swap x and y, because we sort these and they have to pull the actual color struct themselves
+	// what we do here is. We swap the pixels cx and cy. This puts these in the right order. 
+	// But x is still pointing to the previous address where cy is now located.
+	// So not only is the hue inaccurate to the pixel, if x were to swap with z, x would swap cy cause thats the pixel it points to 
+	// I don't know how to write efficient comments, but this will help me understand when i forget again
 }
 
 

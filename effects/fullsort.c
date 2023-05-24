@@ -80,9 +80,9 @@ char condition (col_wrap c, int section_offset_counter){
 void pixelsort(uint32_t data[], int width, int height) {
 	color* pixelData = (color*) data;
 	col_wrap* pixels = calloc(width*height, sizeof(col_wrap));
-	printf("> V4 sorting pixels\n");
+	printf("> Full sorting pixels\n");
 
-	#pragma omp parallel for
+//	#pragma omp parallel for
 	for (int y = 0; y < height; ++y) {
 		int k = 0;
 		for (int x = 0; x < width; ++x) {
@@ -92,18 +92,10 @@ void pixelsort(uint32_t data[], int width, int height) {
 			pixels[index].col = current;
 			pixels[index].hue = getHue(current);
 			pixels[index].brightness = getBrightness(current);
-			if (condition(pixels[index], k) || x+1>=width){
-
-				sortInterval(pixels, index - k, index);
-				//debugIntervals(pixels, index - k, index);
-
-				ran_section_len = RMIN + (rand() % RMAX);
-				k = 0;
-			}
-			k++;
 		}
 	}
 	//pragma end
+	sortInterval(pixels, 0, width*height-1);
 }
 
 void swaylock_effect(uint32_t data[], int width, int height) {
