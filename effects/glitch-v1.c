@@ -12,10 +12,10 @@ char min(int x, char y){
 char max(char x, char y) { return (x >= y)? x:y; }
 
 typedef struct color {
+	char a;
 	char b;
 	char g;
 	char r;
-	char a;
 } color;
 
 typedef struct col_wrap{
@@ -57,6 +57,14 @@ int getBrightness(color* c){
 	return (int)(0.2126*c->r + 0.7152*c->g + 0.0722*c->b);
 }
 
+void debugprint(col_wrap cw){
+    printf("    | {%02u, %02u, %02u}\t (%u) %x",
+            (unsigned char) cw.col->r,
+            (unsigned char) cw.col->g,
+            (unsigned char) cw.col->b,
+            (unsigned char) getBrightness(cw.col),
+            (unsigned char) cw.brightness);
+}
 
 void swap(col_wrap* x, col_wrap* y){
 	//swapped the wrapper structs
@@ -91,13 +99,27 @@ void sortInterval(col_wrap* a, int size){
 		a[i].b = b;
 	}
 	return;*/
+
+    for (int i=0;i<size;i++) {
+    }
+    printf("size: %d | ", size);
+
 	int gap = size;
     char swapped = 0;
     while ((gap > 1) || swapped) {
-        if (gap > 1) gap = (int)(gap/1.247330950103979);
+        if (gap > 1){
+            printf("gap: %d | ", gap);
+            gap = (int)(gap/1.247330950103979);
+            printf("gap2: %d\n", gap);
+        }
         swapped = 0;
         for (int i = 0; gap + i < size; i++){
 		    if (isLess(a+i+gap, a+i)) {
+
+               printf("    Swap:");
+               debugprint(a[i+gap]);
+               debugprint(a[i]);
+               printf("\n");
 			   swap(a+i+gap, a+i);
 				swapped = 1;
 			}
@@ -130,6 +152,7 @@ void swaylock_effect(uint32_t data[], int width, int height) {
 			
 			
 
+            printf("Newline %d\n", y);
 			for (int x = 0; x < width; ++x) {
 				int index = y * width + x;
 				// create the pixel_wrapper and put the hue in there
@@ -139,9 +162,14 @@ void swaylock_effect(uint32_t data[], int width, int height) {
 				pixels[index].col=current;
 				pixels[index].hue=hue;
 				pixels[index].brightness=brightness;
+                printf("List:");
+                debugprint(pixels[index]);
+                printf(" | brightness: %d", brightness);
+                printf("\n");
 
 				//if (k >= ran) {
 				if (brightness > bright_threshold || k>=width-1) {	
+                    printf("=^=sort=^=\n");
 					//printf("hue: %d\n", hue);
 					// we give it an offset :)
 					// example: section from 0d40 to 0d52: index is d52, k is 12, so we start at d52-12 = d40 (hopefully)

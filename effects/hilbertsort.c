@@ -2,10 +2,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
-#include "colorFunctions.c"
 #include "gilbert2d.c"
-int counter = 0;
-void swap(col_wrap* x, col_wrap* y){
+
+static void swap(col_wrap* x, col_wrap* y){
 	//swapped the wrapper structs
 	col_wrap temp = *x;
 	*x = *y;
@@ -19,17 +18,10 @@ void swap(col_wrap* x, col_wrap* y){
 	color* tempp = x->col;
 	x->col = y->col;
 	y->col = tempp;
-	counter++;
 }
 
 
-char isLess(col_wrap* x, col_wrap* y){
-//	return (x->r*x->g*x->b < y->r*y->g*y->b);
-//	return (x->hue < y->hue);
-	return (x->brightness < y->brightness);
-}
-
-void sortInterval(col_wrap* a, int start, int end){
+static void sortInterval(col_wrap* a, int start, int end){
     // sorting algorithm i copied from stackoverflow haha, classic;
     int gap = end-start;
     char swapped = 0;
@@ -63,7 +55,7 @@ int ran_section_len = 0;
 
 enum selec_mode {RANDOM, HUE, BRIGHT, FULL_LINE};
 
-char condition (col_wrap c, int section_offset_counter){
+static char condition (col_wrap c, int section_offset_counter){
     switch(RANDOM){
 	case RANDOM:
 		section_offset_counter++;
@@ -81,7 +73,7 @@ char condition (col_wrap c, int section_offset_counter){
     }
 }
 
-void pixelsort(uint32_t data[], int width, int height) {
+void hilbertsort(uint32_t data[], int width, int height) {
 	color* origData = (color*) data;
 	col_wrap* pixels = calloc(width*height, sizeof(col_wrap));
 
@@ -128,5 +120,6 @@ void pixelsort(uint32_t data[], int width, int height) {
 void swaylock_effect(uint32_t data[], int width, int height) {
 	RMAX = 200 + rand() % 1200;
 	printf("Sorting with max section length of %d\n", RMAX);
-	pixelsort(data, width, height);
+	hilbertsort(data, width, height);
 }
+

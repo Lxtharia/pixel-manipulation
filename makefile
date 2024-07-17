@@ -1,7 +1,11 @@
 
 
 # main app
-process-image.out: process-image.c effects/v2-pixelsort-effect.c
+# process-image.out: process-image.c effects/v2-pixelsort-effect.c
+process-image.out: process-image.c effects/glitch-v1.o
+	gcc $< -o $@
+
+%.out:  %.c 
 	gcc $< -o $@
 
 # any shared lib

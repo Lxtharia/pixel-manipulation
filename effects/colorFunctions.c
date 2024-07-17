@@ -55,3 +55,13 @@ int getWhiteness(col_wrap* cw){
 	color* c = cw->col;
 	return c->r * c->g * c-> b;
 }
+
+
+
+char isLess(col_wrap* x, col_wrap* y){
+//	return getHue(x->r, x->g, x->b) < getHue(y->r, y->g, y->b); 
+//	return (x->r*x->g*x->b < y->r*y->g*y->b);
+//	return (x->hue < y->hue);
+	return (x->brightness < y->brightness);
+}
+
